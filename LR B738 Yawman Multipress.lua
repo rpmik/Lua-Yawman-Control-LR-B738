@@ -100,6 +100,7 @@ function multipressLRB738_buttons()
 			set_button_assignment(DPAD_DOWN,NoCommand)
 			set_button_assignment(DPAD_LEFT,"sim/general/zoom_out_fast")
 			set_button_assignment(DPAD_RIGHT,"sim/general/zoom_in_fast")
+			set_button_assignment(DPAD_CENTER,NoCommand)
 			set_button_assignment(WHEEL_UP, NoCommand)
 			set_button_assignment(WHEEL_DOWN, NoCommand)
 			set_button_assignment(LEFT_BUMPER, NoCommand) -- multifunction
