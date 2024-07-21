@@ -1,5 +1,6 @@
 * Also see [the script for the Felis 747-200](https://github.com/rpmik/Lua-Controller-Mapping-Felis-B742).
 * Also see [the script for the Flight Factor 777-200 v2](https://github.com/rpmik/Lua-Yawman-Control-Flight-Factor-B772).
+* Also see [the script for the XCrafts E-175 for XP12](https://github.com/rpmik/Lua-Yawman-Control-XCrafts-E175).
 
 # Requirements
 * [X-Plane 12](https://www.x-plane.com/) only
