@@ -66,7 +66,6 @@ Some Yawman documentation refer to these as MF 1L (SP1), MF 1C (SP2), MF 1R (SP3
 	* SP4 = Overhead panel
 	* SP5 = Upper Overhead panel
 	* SP6 = Pilot's view of throttles
-	* Right Bumper = VNAV
 	
 * DPAD Up plus
 	* Wheel Up = Flaps Up
