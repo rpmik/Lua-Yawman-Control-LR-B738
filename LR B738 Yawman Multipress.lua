@@ -92,8 +92,6 @@ function multipressLRB738_buttons()
     -- if aircraft is an Embraer E-175 then procede
     if PLANE_ICAO == "B738" then 
         FRAME_COUNT = FRAME_COUNT + 1.0  
-		
-
 		-- Base Config buttons that should almost always get reassigned except during a press
         if not STILL_PRESSED then -- avoid overwriting assignments during other activity
 			set_button_assignment(DPAD_UP,NoCommand)
@@ -106,7 +104,7 @@ function multipressLRB738_buttons()
 			set_button_assignment(LEFT_BUMPER, NoCommand) -- multifunction
 			set_button_assignment(RIGHT_BUMPER, NoCommand) -- multifunction
 			set_button_assignment(SIXPACK_1,NoCommand)
-			set_button_assignment(SIXPACK_2,NoCommand)
+			set_button_assignment(SIXPACK_2,"sim/flight_controls/brakes_regular")
 			set_button_assignment(SIXPACK_3,NoCommand)		
 			set_button_assignment(SIXPACK_4,NoCommand)
 			set_button_assignment(SIXPACK_5,NoCommand)
