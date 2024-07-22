@@ -50,7 +50,7 @@ local FRAME_COUNT = 0.0
 local GoFasterFrameRate = 0.0
 local PauseIncrementFrameCount = 0.0
 
-# Clean up the code with this
+-- Clean up the code with this
 local NoCommand = "sim/none/none"
 
 -- If aircraft's interactive Command increment is not continuous or continuous and too fast, use framerate to meter incrementing
@@ -353,7 +353,7 @@ function multipressLRB738_buttons()
 		end
 
 -- All buttons need to be released to end STILL_PRESSED phase
-		if not sp1_pressed and not sp2_pressed and not sp3_pressed and not sp4_pressed and not sp5_pressed and not sp6_pressed and not right_bumper_pressed and not left_bumper_pressed and not dpad_center_pressed and not dpad_down_pressed and not dpad_left and not dpad_right then
+		if not sp1_pressed and not sp2_pressed and not sp3_pressed and not sp4_pressed and not sp5_pressed and not sp6_pressed and not right_bumper_pressed and not left_bumper_pressed and not dpad_center_pressed and not dpad_down_pressed and not dpad_left_pressed and not dpad_right_pressed then
 			STILL_PRESSED = false
 		end
 
