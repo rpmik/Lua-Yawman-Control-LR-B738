@@ -54,21 +54,21 @@ local PauseIncrementFrameCount = 0.0
 local NoCommand = "sim/none/none"
 
 -- If aircraft's interactive Command increment is not continuous or continuous and too fast, use framerate to meter incrementing
-function meterB738Interaction(strCommandName1, strCommandName2, floatSeconds, floatIntervalSpeed)
+function meterB738Interaction(boolButtonPressed, strCommandName1, strCommandName2, floatSeconds, floatIntervalSpeed)
 		-- floatIntervalSpeed -- generally, higher is slower. 
 		
 		-- Set metering based on current frame rate
 		DataRef("FrameRatePeriod","sim/operation/misc/frame_rate_period","writable")
 		CurFrame = FRAME_COUNT
 		
-		if not DPAD_PRESSED then
+		if not boolButtonPressed then
 			FrameRate = 1/FrameRatePeriod
 			-- Roughly calculate how many frames to wait before incrementing based on floatSeconds
 			GoFasterFrameRate = (floatSeconds * FrameRate) + CurFrame -- start five seconds of slow increments
 		end
 
 		if CurFrame < GoFasterFrameRate then
-			if not DPAD_PRESSED then
+			if not boolButtonPressed then
 				command_once(strCommandName1)
 				-- calculate frame to wait until continuing
 				-- if floatSeconds is 2 then we'll wait around 1 second before continuing so as to allow a single standalone increment
@@ -79,7 +79,7 @@ function meterB738Interaction(strCommandName1, strCommandName2, floatSeconds, fl
 					command_once(strCommandName1)
 				end
 			end
-		elseif CurFrame >= GoFasterFrameRate and DPAD_PRESSED then
+		elseif CurFrame >= GoFasterFrameRate and boolButtonPressed then
 			-- If current frame is divisible by five then issue a command -- helps to delay the command in a regular interval
 			if (CurFrame % floatIntervalSpeed) == 0 then
 				command_once(strCommandName2)
@@ -172,10 +172,10 @@ function multipressLRB738_buttons()
 			end
 			
 			if dpad_up_pressed then
-				meterB738Interaction("sim/autopilot/airspeed_up", "sim/autopilot/airspeed_up", 1.0, 2.0) -- at around two seconds, use larger increment
+				meterB738Interaction(DPAD_PRESSED,"sim/autopilot/airspeed_up", "sim/autopilot/airspeed_up", 1.0, 2.0) -- at around two seconds, use larger increment
 				DPAD_PRESSED = true
 			elseif dpad_down_pressed then
-				meterB738Interaction("sim/autopilot/airspeed_down", "sim/autopilot/airspeed_down",1.0,2.0)
+				meterB738Interaction(DPAD_PRESSED,"sim/autopilot/airspeed_down", "sim/autopilot/airspeed_down",1.0,2.0)
 				DPAD_PRESSED = true
 			end
 			
@@ -218,10 +218,10 @@ function multipressLRB738_buttons()
 			end
 			
 			if dpad_up_pressed then
-				meterB738Interaction("sim/autopilot/altitude_up", "sim/autopilot/altitude_up", 1.0, 2.0) -- at around two seconds, use larger increment
+				meterB738Interaction(DPAD_PRESSED,"sim/autopilot/altitude_up", "sim/autopilot/altitude_up", 1.0, 2.0) -- at around two seconds, use larger increment
 				DPAD_PRESSED = true
 			elseif dpad_down_pressed then
-				meterB738Interaction("sim/autopilot/altitude_down", "sim/autopilot/altitude_down", 1.0, 2.0)
+				meterB738Interaction(DPAD_PRESSED,"sim/autopilot/altitude_down", "sim/autopilot/altitude_down", 1.0, 2.0)
 				DPAD_PRESSED = true
 			end
 			
@@ -235,10 +235,10 @@ function multipressLRB738_buttons()
 			end
 			
 			if dpad_up_pressed then
-				meterB738Interaction("sim/autopilot/heading_up", "sim/autopilot/heading_up", 1.0, 3.0) -- at around two seconds, use larger increment
+				meterB738Interaction(DPAD_PRESSED,"sim/autopilot/heading_up", "sim/autopilot/heading_up", 1.0, 3.0) -- at around two seconds, use larger increment
 				DPAD_PRESSED = true
 			elseif dpad_down_pressed then
-				meterB738Interaction("sim/autopilot/heading_down", "sim/autopilot/heading_down", 1.0, 3.0)
+				meterB738Interaction(DPAD_PRESSED,"sim/autopilot/heading_down", "sim/autopilot/heading_down", 1.0, 3.0)
 				DPAD_PRESSED = true
 			end
 			STILL_PRESSED = true
@@ -254,10 +254,10 @@ function multipressLRB738_buttons()
 
 			
 			if dpad_up_pressed then
-				meterB738Interaction("sim/autopilot/vertical_speed_up", "sim/autopilot/vertical_speed_up", 1.0, 3.0) -- at around two seconds, use larger increment
+				meterB738Interaction(DPAD_PRESSED,"sim/autopilot/vertical_speed_up", "sim/autopilot/vertical_speed_up", 1.0, 3.0) -- at around two seconds, use larger increment
 				DPAD_PRESSED = true
 			elseif dpad_down_pressed then
-				meterB738Interaction("sim/autopilot/vertical_speed_down", "sim/autopilot/vertical_speed_down", 1.0, 3.0)
+				meterB738Interaction(DPAD_PRESSED,"sim/autopilot/vertical_speed_down", "sim/autopilot/vertical_speed_down", 1.0, 3.0)
 				DPAD_PRESSED = true
 			end
 			
