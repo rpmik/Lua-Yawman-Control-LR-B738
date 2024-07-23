@@ -241,7 +241,7 @@ function multipressLRB738_buttons()
 			set_button_assignment(SIXPACK_1,NoCommand)
 
 			if wheel_up_pressed or wheel_down_pressed then
-				meterB738Interaction(BUMPERS_PRESSED, "sim/flight_controls/brakes_toggle_max", "sim/flight_controls/brakes_toggle_max", 1.0, 2.0) -- at around two seconds, use larger increment
+				meterB738Interaction(BUMPERS_PRESSED, "sim/flight_controls/brakes_toggle_max", "sim/flight_controls/brakes_toggle_max", 2.0, 20) -- at around two seconds, use larger increment
 				BUMPERS_PRESSED = true
 			end
 			
@@ -304,10 +304,10 @@ function multipressLRB738_buttons()
 			end
 			
 			if wheel_up_pressed then
-				meterB738Interaction(DPAD_PRESSED, "sim/flight_controls/flaps_down", "sim/flight_controls/flaps_down", 1.0, 2.0) -- at around two seconds, use larger increment
+				meterB738Interaction(DPAD_PRESSED, "sim/flight_controls/flaps_down", "sim/flight_controls/flaps_down", 1.0, 10) -- at around two seconds, use larger increment
 				DPAD_PRESSED = true
 			elseif wheel_down_pressed then
-				meterB738Interaction(DPAD_PRESSED, "sim/flight_controls/flaps_up", "sim/flight_controls/flaps_up", 1.0, 2.0) -- at around two seconds, use larger increment
+				meterB738Interaction(DPAD_PRESSED, "sim/flight_controls/flaps_up", "sim/flight_controls/flaps_up", 1.0, 10) -- at around two seconds, use larger increment
 				DPAD_PRESSED = true
 			end
 			
@@ -347,7 +347,7 @@ function multipressLRB738_buttons()
 		if not dpad_up_pressed and not dpad_left_pressed and not dpad_right_pressed and not dpad_down_pressed then
 			DPAD_PRESSED = false
 		end
-
+		
 		if not left_bumper_pressed and not right_bumper_pressed then
 			BUMPERS_PRESSED = false
 		end
