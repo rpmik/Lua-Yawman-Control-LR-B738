@@ -39,54 +39,21 @@ local DPAD_DOWN = 23
 local DPAD_RIGHT = 24
 
 -- Logic states to keep button assignments sane
-local PAUSE_STATE = false
 local STILL_PRESSED = false -- track presses for everything
 local MULTI_SIXPACK_PRESSED = false -- track presses for only the six pack where there's multiple six pack buttons involved
 local DPAD_PRESSED = false
+local BUMPERS_PRESSED = false
 
 local CHASE_VIEW = false
 
 local FRAME_COUNT = 0.0
 local GoFasterFrameRate = 0.0
 local PauseIncrementFrameCount = 0.0
+local FrameRate = 0.0
+local CurFrame = 0.0
 
 -- Clean up the code with this
 local NoCommand = "sim/none/none"
-
--- If aircraft's interactive Command increment is not continuous or continuous and too fast, use framerate to meter incrementing
-function meterB738Interaction(boolButtonPressed, strCommandName1, strCommandName2, floatSeconds, floatIntervalSpeed)
-		-- floatIntervalSpeed -- generally, higher is slower. 
-		
-		-- Set metering based on current frame rate
-		DataRef("FrameRatePeriod","sim/operation/misc/frame_rate_period","writable")
-		CurFrame = FRAME_COUNT
-		
-		if not boolButtonPressed then
-			FrameRate = 1/FrameRatePeriod
-			-- Roughly calculate how many frames to wait before incrementing based on floatSeconds
-			GoFasterFrameRate = (floatSeconds * FrameRate) + CurFrame -- start five seconds of slow increments
-		end
-
-		if CurFrame < GoFasterFrameRate then
-			if not boolButtonPressed then
-				command_once(strCommandName1)
-				-- calculate frame to wait until continuing
-				-- if floatSeconds is 2 then we'll wait around 1 second before continuing so as to allow a single standalone increment
-				PauseIncrementFrameCount = ((floatSeconds/2) * FrameRate) + CurFrame
-			else
-				-- wait a beat with PauseIncrementFrameCount then continue
-				if (CurFrame > PauseIncrementFrameCount) and (CurFrame % floatIntervalSpeed) == 0 then
-					command_once(strCommandName1)
-				end
-			end
-		elseif CurFrame >= GoFasterFrameRate and boolButtonPressed then
-			-- If current frame is divisible by five then issue a command -- helps to delay the command in a regular interval
-			if (CurFrame % floatIntervalSpeed) == 0 then
-				command_once(strCommandName2)
-			end
-		end			
-end
-
 
 function multipressLRB738_buttons() 
     -- if aircraft is an Embraer E-175 then procede
@@ -138,6 +105,9 @@ function multipressLRB738_buttons()
 		dpad_down_pressed = button(DPAD_DOWN)
 		dpad_left_pressed = button(DPAD_LEFT)
 		dpad_right_pressed = button(DPAD_RIGHT)
+		
+		wheel_up_pressed = button(WHEEL_UP)
+		wheel_down_pressed = button(WHEEL_DOWN)
 		
 -- Start expanded control logic
 
@@ -270,10 +240,17 @@ function multipressLRB738_buttons()
 			set_button_assignment(SIXPACK_2,NoCommand)
 			set_button_assignment(SIXPACK_1,NoCommand)
 
+			if wheel_up_pressed or wheel_down_pressed then
+				meterB738Interaction(BUMPERS_PRESSED, "sim/flight_controls/brakes_toggle_max", "sim/flight_controls/brakes_toggle_max", 1.0, 2.0) -- at around two seconds, use larger increment
+				BUMPERS_PRESSED = true
+			end
+			
+--[[
 			if not STILL_PRESSED then
 				set_button_assignment(WHEEL_UP,"sim/flight_controls/brakes_toggle_max")
 				set_button_assignment(WHEEL_DOWN,"sim/flight_controls/brakes_toggle_max")
 			end
+]]
 				-- Cockpit camera height not implemented as it deals with the rudder axes.....
 			if sp1_pressed and not MULTI_SIXPACK_PRESSED then
 				if dpad_up_pressed then
@@ -315,8 +292,8 @@ function multipressLRB738_buttons()
 		if dpad_up_pressed then
 			if not STILL_PRESSED then
 				set_button_assignment(RIGHT_BUMPER,"laminar/B738/autopilot/capt_toga_press") -- there's only a toggle (Will investigate later)
-				set_button_assignment(WHEEL_UP,"sim/flight_controls/flaps_down")
-				set_button_assignment(WHEEL_DOWN,"sim/flight_controls/flaps_up")
+				--set_button_assignment(WHEEL_UP,"sim/flight_controls/flaps_down")
+				--set_button_assignment(WHEEL_DOWN,"sim/flight_controls/flaps_up")
 				set_button_assignment(POV_LEFT,"sim/view/glance_left")
 				set_button_assignment(POV_RIGHT,"sim/view/glance_right")
 				set_button_assignment(POV_UP,"sim/view/straight_up")
@@ -324,6 +301,14 @@ function multipressLRB738_buttons()
 		
 				set_button_assignment(DPAD_LEFT,NoCommand)
 				set_button_assignment(DPAD_RIGHT,NoCommand)
+			end
+			
+			if wheel_up_pressed then
+				meterB738Interaction(DPAD_PRESSED, "sim/flight_controls/flaps_down", "sim/flight_controls/flaps_down", 1.0, 2.0) -- at around two seconds, use larger increment
+				DPAD_PRESSED = true
+			elseif wheel_down_pressed then
+				meterB738Interaction(DPAD_PRESSED, "sim/flight_controls/flaps_up", "sim/flight_controls/flaps_up", 1.0, 2.0) -- at around two seconds, use larger increment
+				DPAD_PRESSED = true
 			end
 			
 			if dpad_left_pressed then
@@ -363,8 +348,47 @@ function multipressLRB738_buttons()
 			DPAD_PRESSED = false
 		end
 
+		if not left_bumper_pressed and not right_bumper_pressed then
+			BUMPERS_PRESSED = false
+		end
+		
     end 
 end
+
+-- If aircraft's interactive Command increment is not continuous or continuous and too fast, use framerate to meter incrementing
+function meterB738Interaction(boolButtonPressed, strCommandName1, strCommandName2, floatSeconds, floatIntervalSpeed)
+		-- floatIntervalSpeed -- generally, higher is slower. 
+		
+		-- Set metering based on current frame rate
+		DataRef("FrameRatePeriod","sim/operation/misc/frame_rate_period","writable")
+		CurFrame = FRAME_COUNT
+		
+		if not boolButtonPressed then
+			FrameRate = 1/FrameRatePeriod
+			-- Roughly calculate how many frames to wait before incrementing based on floatSeconds
+			GoFasterFrameRate = (floatSeconds * FrameRate) + CurFrame -- start five seconds of slow increments
+		end
+
+		if CurFrame < GoFasterFrameRate then
+			if not boolButtonPressed then
+				command_once(strCommandName1)
+				-- calculate frame to wait until continuing
+				-- if floatSeconds is 2 then we'll wait around 1 second before continuing so as to allow a single standalone increment
+				PauseIncrementFrameCount = ((floatSeconds/2) * FrameRate) + CurFrame
+			else
+				-- wait a beat with PauseIncrementFrameCount then continue
+				if (CurFrame > PauseIncrementFrameCount) and (CurFrame % floatIntervalSpeed) == 0 then
+					command_once(strCommandName1)
+				end
+			end
+		elseif CurFrame >= GoFasterFrameRate and boolButtonPressed then
+			-- If current frame is divisible by five then issue a command -- helps to delay the command in a regular interval
+			if (CurFrame % floatIntervalSpeed) == 0 then
+				command_once(strCommandName2)
+			end
+		end			
+end
+
 
 -- Don't mess with other configurations
 if PLANE_ICAO == "B738" then 
