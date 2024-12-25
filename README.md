@@ -3,6 +3,7 @@
 
 # Requirements
 * [X-Plane 12](https://www.x-plane.com/) only
+* The original Laminar Boeing 737-800 (not the mods)
 * [FlyWithLua 2.8 for X-Plane 12](https://forums.x-plane.org/index.php?/files/file/82888-flywithlua-ng-next-generation-plus-edition-for-x-plane-12-win-lin-mac/)
 * [Yawman Arrow Controller](https://yawmanflight.com/)
 
